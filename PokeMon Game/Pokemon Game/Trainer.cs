@@ -19,16 +19,15 @@
 
         public Pokemon SelectedPokemon { get; private set; }
 
-        private int Money { get; set; }
+        public int Money { get; private set; }
 
         public Trainer(string name, string description)
         {
-            var trainingBall = new TrainingBall();
             Name = name;
             Description = description;
             TrainerPokemon = new List<Pokemon>(6);
             DeadTrainerpokemon = new List<Pokemon>();
-            List<Pokemon> DepositedPokemons = new List<Pokemon>();
+            List<Pokemon> depositedPokemons = new List<Pokemon>();
             Items = new List<Item>();
             PokeBallsList = new List<PokeBall>();
             GymBadges = new List<string>();
@@ -48,6 +47,11 @@
             Level = 5;
             SelectedPokemon = TrainerPokemon[0];
             Money = Level * 100;
+        }
+
+        public List<Item> GetItemsList()
+        {
+            return Items;
         }
 
         public void ShowTrainerPokemon()
@@ -80,9 +84,23 @@
             return TrainerPokemon;
         }
 
-        public List<Pokemon> GetDeadPokemonsList()
+        public List<Pokemon> GetDeadPokemonList()
         {
             return DeadTrainerpokemon;
+        }
+
+        public int GetMoney()
+        {
+            return Money;
+        }
+
+        public int SetDecreaseMoney(int sum)
+        {
+          return Money -= sum;
+        }
+        public int SetIncreaseMoney(int sum)
+        {
+            return Money += sum;
         }
 
     }

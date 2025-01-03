@@ -5,30 +5,30 @@ namespace Pokemon_Game
 {
     internal class BattleManager
     {
-        private string text = new string('_', 60);
+        private string _text = new string('_', 60);
         public BattleManager()
         {
 
         }
-        public void DisplayStats(Trainer _trainer, Trainer gymTrainerRock)
+        public void DisplayStats(Trainer trainer, Trainer gymTrainerRock)
         {
             var opponent = gymTrainerRock.SelectedPokemon;
-            var myPoke = _trainer.SelectedPokemon;
+            var myPoke = trainer.SelectedPokemon;
             Console.WriteLine($"{opponent.Name} Lvl:{opponent.Level} HP:{opponent.HpBar()}{opponent.Hp}/{opponent.MaxHp}");
-            Console.WriteLine($"{text}");
+            Console.WriteLine($"{_text}");
             Console.WriteLine($"{myPoke.Name} Lvl:{myPoke.Level} HP:{myPoke.HpBar()} {myPoke.Hp}/{myPoke.MaxHp}");
         }
 
-        public void BattleMenu(Trainer _trainer, Trainer gymTrainerRock)
+        public void BattleMenu(Trainer trainer, Trainer gymTrainerRock)
         {
-            _trainer.ChooseTrainerPokemon(_trainer);
-            var tPokemon = _trainer.SelectedPokemon;
+            trainer.ChooseTrainerPokemon(trainer);
+            var tPokemon = trainer.SelectedPokemon;
             var gPokemon = gymTrainerRock.SelectedPokemon;
             Console.WriteLine($"Selectedpokemon gymLeader:{gPokemon.Name}");
             Console.WriteLine("The battle begins");
             while (tPokemon.Hp > 0 || gPokemon.Hp > 0)
                 DisplayAttackMenu(tPokemon, gPokemon);
-                DisplayStats(_trainer, gymTrainerRock);
+                DisplayStats(trainer, gymTrainerRock);
                 UseAttackOpponent(tPokemon, gPokemon);
             {   
             }
@@ -36,26 +36,26 @@ namespace Pokemon_Game
             if (gPokemon.Hp <= 0)
             {
                 Console.WriteLine($"Opponents {gPokemon.Name} was defeated.");
-                gymTrainerRock.GetDeadPokemonsList().Add(gPokemon);
+                gymTrainerRock.GetDeadPokemonList().Add(gPokemon);
             }
             else if (tPokemon.Hp <= 0)
             {
                 Console.WriteLine($"{tPokemon.Name} was defeated.");
-                _trainer.GetDeadPokemonsList().Add(tPokemon);
+                trainer.GetDeadPokemonList().Add(tPokemon);
             }
         }
 
-        public void DisplayAttackMenu(Pokemon _SelectedPokemon, Pokemon gymPokemon)
-        {
+        public void DisplayAttackMenu(Pokemon selectedPokemon, Pokemon gymPokemon)
+        {   
             Console.WriteLine("Choose an attack");
-            for (int i = 0; i < _SelectedPokemon.Attacks.Count; i++)
+            for (int i = 0; i < selectedPokemon.Attacks.Count; i++)
             {
-                Console.WriteLine($"{i + 1}.{_SelectedPokemon.Attacks[i].Name}");
+                Console.WriteLine($"{i + 1}.{selectedPokemon.Attacks[i].Name}");
             }
 
             var attackIndex = Convert.ToInt32(Console.ReadLine());
-            var attack = _SelectedPokemon.Attacks[attackIndex - 1];
-            if (attackIndex >= 0 && attackIndex <= _SelectedPokemon.Attacks.Count)
+            var attack = selectedPokemon.Attacks[attackIndex - 1];
+            if (attackIndex >= 0 && attackIndex <= selectedPokemon.Attacks.Count)
             {
                 gymPokemon.DamageTaken(attack.Damage, attack.Type);
                 
@@ -64,15 +64,14 @@ namespace Pokemon_Game
             {
                 Console.WriteLine("Invalid choice, choose again.");
             }
-            Console.Clear();
         }
 
-        public void UseAttackOpponent(Pokemon _selectedPokemon, Pokemon _gymPokemon)
+        public void UseAttackOpponent(Pokemon selectedPokemon, Pokemon gymPokemon)
         {
             Random rand = new Random();
-            int num = rand.Next(0, _gymPokemon.Attacks.Count);
-            var attack = _gymPokemon.Attacks[num];
-            _selectedPokemon.DamageTaken(attack.Damage, attack.Type);
+            int num = rand.Next(0, gymPokemon.Attacks.Count);
+            var attack = gymPokemon.Attacks[num];
+            selectedPokemon.DamageTaken(attack.Damage, attack.Type);
         }
 
 

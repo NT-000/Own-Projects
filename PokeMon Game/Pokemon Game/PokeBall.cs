@@ -13,50 +13,43 @@
             Price = price;
             Strength = strength;
         }
-
-        public int GetPrice()
-        {
-            return Price;
-        }
-
     }
 
-    internal class TrainingBall : PokeBall
+    internal class TrainingBall : Item
     {
-        public TrainingBall() : base("Training Ball", 10, 100)
+        public TrainingBall()
         {
-
-        }
-
-    }
-    internal class GreatBall : PokeBall
-    {
-        public GreatBall() : base("Great ball", 20, 200)
-        {
-        }
-
-        public List<GreatBall> PrintTwentyGreatBalls()
-        {
-            List<GreatBall> greatBalls = new List<GreatBall>();
-            for (int i = 0; i < 20; i++)
-            {
-                greatBalls.Add(new GreatBall());
-            }
-
-            return greatBalls;
+            Name = "Training ball";
+            Strength = 10;
+            Price = 100;
         }
     }
-    internal class UltraBall : PokeBall
+    internal class GreatBall : Item
     {
-        public UltraBall() : base("Ultra ball", 40, 600)
+        public GreatBall()
         {
+            Name = "Great ball";
+            Strength = 20;
+            Price = 200;
+        }
+    }
+    internal class UltraBall : Item
+    {
+        public UltraBall()
+        {
+            Name = "Ultra ball";
+            Strength = 40;
+            Price = 600;
         }
  
     }
-    internal class MasterBall : PokeBall
+    internal class MasterBall : Item
     {
-        public MasterBall() : base("Master ball", 100, 0)
+        public MasterBall()
         {
+            Name = "Master ball";
+            Strength = 100;
+            Price = 0;
         }
     }
 

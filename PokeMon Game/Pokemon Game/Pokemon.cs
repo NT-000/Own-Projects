@@ -40,16 +40,16 @@
 
         public void GenerateRandomPokemonLvlBeginner(Random random)
         {
-            var _grassPokemon = new List<Pokemon>();
-            List<Pokemon> _randomListPokemons =
+            var grassPokemon = new List<Pokemon>();
+            List<Pokemon> randomListPokemons =
             [
                 new RockPokemon.Geodude(), new RockPokemon.Onix(), new ElectricPokemon.Pikachu(),
                 new WaterPokemon.Sqirtle(), new WaterPokemon.Sqirtle()
             ];
-            var num = random.Next(_randomListPokemons.Count);
+            var num = random.Next(randomListPokemons.Count);
             for (var i = 0; i < 15; i++)
             {
-                var blueprintPokemon = _randomListPokemons[num];
+                var blueprintPokemon = randomListPokemons[num];
                 var randomPokemon = new Pokemon(
                     blueprintPokemon.Name,
                     blueprintPokemon.Description,
@@ -62,7 +62,7 @@
                     100,
                     0
                 );
-                _grassPokemon.Add(randomPokemon);
+                grassPokemon.Add(randomPokemon);
             }
         }
         public string HpBar()

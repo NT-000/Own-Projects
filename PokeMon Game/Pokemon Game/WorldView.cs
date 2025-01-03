@@ -14,43 +14,42 @@
 
         public WorldView()
         {
-            MenuWorld();
         }
 
-        public void MenuWorld()
+        public void MenuWorld(Shop shop)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Hi, what's your name?");
-            string Input = Console.ReadLine();
-            var _myTrainer = new Trainer($"{Input}", "From C-Town");
-            var _pikachu = new ElectricPokemon.Pikachu();
-            FirstEncounter(_myTrainer, _pikachu);
+            string input = Console.ReadLine();
+            var myTrainer = new Trainer($"{input}", "From C-Town");
+            var pikachu = new ElectricPokemon.Pikachu();
+            //FirstEncounter(myTrainer, pikachu);
             bool isRunning = true;
             while (isRunning)
             {
                 Console.WriteLine("1.Go to the wilderness");
                 Console.WriteLine("2.Go the the gym");
-                Console.WriteLine("3.Visit the Pokemon SHop");
+                Console.WriteLine("3.Visit the Pokemon Shop");
                 Console.WriteLine("4.Pokemon Healing Center");
                 Console.WriteLine("5.Show Pokemon\n");
-                var input = Convert.ToInt32(Console.ReadLine());
-                switch (input)
+                var input2 = Convert.ToInt32(Console.ReadLine());
+                switch (input2)
                 {
                     case 1:
-                        WildernessMenu(_myTrainer);
+                        WildernessMenu(myTrainer);
                         break;
                     case 2:
-                        GymMenu(_myTrainer);
-                        _myTrainer.Environment = "gym";
+                        GymMenu(myTrainer);
+                        myTrainer.Environment = "gym";
                         break;
                     case 3:
-                        ShopMenu(_myTrainer);
+                        ShopMenu(myTrainer, shop);
                         break;
                     case 4:
                         Console.WriteLine("Pokemon Healing Center");
                         break;
                     case 5:
-                        _myTrainer.ShowTrainerPokemon();
+                        myTrainer.ShowTrainerPokemon();
                         break;
                     default:
                         Console.WriteLine("Invalid input.");
@@ -59,7 +58,7 @@
             }
         }
 
-        public void WildernessMenu(Trainer _trainer)
+        public void WildernessMenu(Trainer trainer)
         {
             bool isRunning = true;
             Console.WriteLine("1.Explore the forrest");
@@ -85,7 +84,7 @@
                 }
             }
         }
-        public void GymMenu(Trainer _trainer)
+        public void GymMenu(Trainer trainer)
         {
             var gymTrainerRock = new Trainer("Joe", "gym", "Joe is the first Gym Leader, he has rock pokemon", new List<Pokemon>() { new RockPokemon.Geodude(), new RockPokemon.Onix(), new RockPokemon.Rhyhorn() });
             var battle = new BattleManager();
@@ -99,7 +98,7 @@
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        battle.BattleMenu(_trainer, gymTrainerRock);
+                        battle.BattleMenu(trainer, gymTrainerRock);
                         break;
                     case "2":
                         break;
@@ -114,16 +113,16 @@
                 }
             }
         }
-        public void FirstEncounter(Trainer _trainer, Pokemon pikachu)
+        public void FirstEncounter(Trainer trainer, Pokemon pikachu)
         {
-            Console.WriteLine($"{_trainer.Name}, you have encountered a wild Pokemon that has taken a likening to you!");
+            Console.WriteLine($"{trainer.Name}, you have encountered a wild Pokemon that has taken a likening to you!");
             Console.WriteLine($"Do you want to adopt this wild {pikachu.Name}?");
             string input = Console.ReadLine();
             Console.WriteLine($"Input received: '{input}'");
             if (input == "yes")
             {
                 Console.WriteLine($"{pikachu.Name} in level {pikachu.Level} added to your pokemons!");
-                _trainer.GetTrainerList().Add(pikachu);
+                trainer.GetTrainerList().Add(pikachu);
             }
             else
             {
@@ -131,7 +130,7 @@
             }
         }
 
-        public void ShopMenu(Trainer _trainer)
+        public void ShopMenu(Trainer trainer, Shop shop)
         {
             bool isRunning = true;
             while (isRunning)
@@ -140,14 +139,15 @@
                 Console.WriteLine("1.To buy");
                 Console.WriteLine("2.To sell");
                 Console.WriteLine("3.Leave");
-                switch (Console.ReadLine())
+                var switchInput = Convert.ToInt32(Console.ReadLine());
+                switch (switchInput)
                 {
-                    case "1":
+                    case 1:
+                    case 2:
+                        Console.Clear();
+                        shop.ShowShopInventory(trainer, switchInput);
                         break;
-                    case "2":
-                        break;
-                    case "3":
-                        new Shop().ShowShopInventory(_trainer);
+                    case 3:
                         break;
                     default:
                         isRunning = false;
