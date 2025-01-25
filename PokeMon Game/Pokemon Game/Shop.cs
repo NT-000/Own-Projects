@@ -63,11 +63,12 @@
             for (int i = 0; i < inputCount; i++)
             {
                 trainer.GetItemsList().Add(selectedItem);
+                _shopStockList.Remove(selectedItem);
             }
             trainer.SetDecreaseMoney(totalCost);
 
             Console.WriteLine(selectedItem.Price * inputCount <= trainerMoney
-                ? $"You just bought {inputCount} x {selectedItem.Name} for {totalCost}!"
+                ? $"You just bought {inputCount} x {selectedItem.Name} for {totalCost}$!"
                 : "You don't have enough money...");
         }
 
@@ -94,6 +95,8 @@
         public void SellItem(Trainer trainer, int switchInput, List<IGrouping<string, Item>> list)
         {
             var selectedItem = SelectedItem(switchInput,list);
+
+
 
         }
 
