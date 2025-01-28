@@ -1,11 +1,11 @@
 
 function updateLoginPageView(){
-    document.getElementById('app').innerHTML = /*HTML*/  `
+    getAppDiv().innerHTML = /*HTML*/  `
     <div class="Outercontainer">
     <div class="Innercontainer">
     <div class="Loginplaceholder">
-    <input type="text" placeholder="Username..." oninput="model.input.loginPage.username=this.value">
     <form>
+    <input type="text" placeholder="Username..." autocomplete="username" oninput="model.input.loginPage.username=this.value">
         <input type="password" placeholder="Password..." autocomplete="password" oninput="model.input.loginPage.password=this.value">
 </form>
 <button onclick="compareUsers()">Login</button>

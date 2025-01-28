@@ -1,8 +1,7 @@
 const model = {
     app: {
-        pages:['loginpage','registerpage','mainpage','orderpage', 'rentpage'],
+        pages:['loginpage','registerpage','mainpage','orderpage', 'rentpage','librarypage'],
         currentPage: "loginpage",
-        appDiv: document.getElementById("app"),
     },//model.app
     input: {
         loginPage:{
@@ -11,7 +10,15 @@ const model = {
           loginMessage: '',  
         },//model.input.loginPage
         registerPage:{
-            
+            inputName:"",
+            inputEmail:"",
+            inputPassword:"",
+            inputPasswordConfirm:"",
+            regMessageEmail: "",
+            regMessagePasswordConfirm:"",
+            regMessage:"",
+            isEmail:false,
+            isPassword:false,
         },//model.input.registerPage
         mainpage:{
             books: [],
@@ -19,7 +26,17 @@ const model = {
         },//model.input.mainpage
         orderpage:{
             orders:[],
+            isOpen: false,
+            inputHtml: "",
         },//model.input.orderpage
+        rentpage:{
+            
+        },//model.input.rentpage
+        librarypage:{
+            inputYear: null,
+            inputSearchTitle: "",
+            resultHtml: "",
+        },//model.input.library
         currentUser: {},//model.input.currentUser
     },//model.input
 }//model

@@ -1,5 +1,7 @@
 
 using Dapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
 namespace BookStore;
@@ -15,12 +17,32 @@ public class SqlReader
 
     public async Task<List<Book>> GetBooks()
     {
-        List<Book> books = new List<Book>();
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
         var query = "SELECT * FROM Books";
-        books = connection.Query<Book>(query).ToList();
-        return books;
+        return connection.Query<Book>(query).ToList();
+    }
+    public async Task<List<Book>> GetBooksAfter(int year)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "SELECT * FROM Books WHERE published_year = @Year ORDER BY published_year ";
+        return connection.Query<Book>(query, new {Year = year}).ToList();
+    }
+
+    public async Task<List<Book>> GetBooksByName(string title)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "SELECT * FROM Books WHERE title LIKE '%' + @Title + '%'";
+        return connection.Query<Book>(query, new {Title = title}).ToList();
+    }
+    public async Task<List<Book>> GetBookByGenre(string Genre)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "SELECT * FROM Books WHERE genre = @Genre";
+        return connection.Query<Book>(query, new {Genre}).ToList();
     }
 
     public async Task<List<Author>> GetAuthors()
@@ -39,6 +61,14 @@ public class SqlReader
         return connection.Query<Customer>(query).ToList();
     }
 
+    public async Task<int> newCustomer(string name, string email, string password)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "INSERT INTO Customers (name, email, password) VALUES (@Name, @Email,@Password)";
+        return await connection.ExecuteAsync(query, new { Name = name, Email = email, Password = password });
+    }
+
     public async Task<List<Order>> GetOrders()
     {
         using var connection = new SqlConnection(_connectionString);
@@ -46,15 +76,7 @@ public class SqlReader
         var query = "SELECT * FROM Orders";
         return connection.Query<Order>(query).ToList();
     }
-
-    public async Task<List<Order>> GetOrderDetails()
-    {
-        using var connection = new SqlConnection(_connectionString);
-        await connection.OpenAsync();
-        var query = "SELECT * FROM OrderDetails";
-        return connection.Query<Order>(query).ToList();
-    }
-
+    
     public async Task<List<OrderItem>> GetOrderItems()
     {
         using var connection = new SqlConnection(_connectionString);

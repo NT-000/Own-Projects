@@ -1,4 +1,1 @@
 
-function goToMainPage(){
-    navigateTo('mainpage');
-}

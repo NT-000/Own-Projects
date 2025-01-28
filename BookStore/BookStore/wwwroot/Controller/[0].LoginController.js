@@ -1,5 +1,4 @@
 
-console.log("LOGIN:Is fetchData defined?", typeof fetchData);
 async function compareUsers(){
     let response = await fetch('/Customers');
     console.log(response);
@@ -9,7 +8,7 @@ async function compareUsers(){
             model.input.currentUser = user;
             console.log("currentUSer:",model.input.currentUser);
             
-            fetchData()
+            await fetchData()
             navigateTo('mainpage');
             break;
         }

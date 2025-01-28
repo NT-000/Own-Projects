@@ -1,37 +1,53 @@
 function changeView(){
-    
-    let currentPage = model.app.currentPage;
-
-    if (currentPage == "loginpage") {
+    if (getCurrentPage() == "loginpage") {
         updateLoginPageView();
         console.log("Navigating to loginpage");
-    } else if (currentPage == "mainpage") {
-        updateViewMainPage()
+    } else if (getCurrentPage() == "mainpage") {
+        updateViewMainPage();
         console.log("Navigating to mainpage");
-    } else if (currentPage== "orderpage") {
+    } else if (getCurrentPage()== "orderpage") {
         updateOrdersView();
+        console.log("Navigating to orderpage");
+    } else if (getCurrentPage() == "rentpage") {
+        updateRentedBooksView();
+        console.log("Navigating to rentpage");
+     } else if(getCurrentPage()== "librarypage") {
+        updateLibraryPageView();
+        console.log("Navigating to librarypage");
     }
-     else if (currentPage == "rentpage") {
-        updateRentedBooksView();}
-   else if (currentPage == "registerpage") {
-        updateRegisterView()
-}}
+    else if (getCurrentPage() == "registerpage") {
+        updateRegisterView();
+        console.log("Navigating to registerpage");
+    }
+    else if (getCurrentPage() == "searchpage") {
+        updateSearchPageView();
+        console.log("Navigating to searchpage");
+    }
+}
 
 function createNavButtons() {
     
     let buttons = '';
     buttons = `
     <button onclick="logoutUser()">Logout</button>
-    <button onclick="goToMainPage()">Mainpage</button>
-    <button onclick="goToLibraryPage()">Library/Order books</button>
-    <button onclick="goToRentedBooksPage()">Rented books</button>
+    <button onclick="navigateTo('mainpage')">Mainpage</button>
+    <button onclick="navigateTo('orderpage')">Your Orders</button>
+    <button onclick="navigateTo('rentpage')">Rented books</button>
+    <button onclick="navigateTo('librarypage')">Library</button>
+    
     `;
     return buttons;
 }
 function logoutUser(){
     model.input.currentUser = '';
+    emptyArrays();
     navigateTo('loginpage');
-    console.log("currentUser:",model.input.currentUser);
+    console.log("currentUser logout:",model.input.currentUser);
+}
+function emptyArrays(){
+    model.input.orderpage.orders = [];
+    model.input.mainpage.books = [];
+    model.input.mainpage.authors = [];
 }
 function navigateTo(page) {
     model.app.currentPage = page;
@@ -42,8 +58,8 @@ function navigateTo(page) {
     async function fetchData(){
         await fetchBooks();
         await fetchAuthors();
-        await fetchOrders();
         changeView();
+        console.log("Orders in model:", model.input.orderpage.orders);
     }
 
 async function fetchBooks(){
@@ -58,9 +74,16 @@ async function fetchAuthors(){
     model.input.mainpage.authors = await response.json();
     console.log("fetchauthor",model.input.mainpage.authors);
 }
-async function fetchOrders(){
-    let response = await fetch('/Orders');
-    console.log(response);
-    model.input.orderpage.orders = await response.json();
-    console.log("orders",model.input.orderpage.orders);
+function getAppDiv(){
+    return document.getElementById('app');
+}
+function getCurrentPage(){
+    return model.app.currentPage;
+}
+function getCurrentUser(){
+    return model.input.currentUser;
+}
+
+function getResultHtml(){
+    return model.input.librarypage.resultHtml;
 }
