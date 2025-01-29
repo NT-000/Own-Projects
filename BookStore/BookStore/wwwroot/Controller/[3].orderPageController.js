@@ -2,10 +2,12 @@ async function findOrder(){
     let response = await fetch("/Orders")
     let orders = await response.json();
     console.log("Orders fetched(findOrder):", orders);
-
-    for(let order of orders){
-        if(getCurrentUser().id == order.customer_id){
-            await showOrderItem(order)
+    if(!model.input.orderpage.isOpen) {
+        model.input.orderpage.orders = [];
+        for (let order of orders) {
+            if (getCurrentUser().id == order.customer_id) {
+                await showOrderItem(order)
+            }
         }
     }
     console.log("Final orders in model:", model.input.orderpage.orders);

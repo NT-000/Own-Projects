@@ -32,6 +32,12 @@ app.MapPost("/Customers", async ([FromServices] SqlReader sqlReader, [FromBody] 
     {
         return Results.BadRequest("Invalid input data");
     }
+
+    var existingCustomer = await sqlReader.GetCustomers();
+    if (existingCustomer.Any(customer => customer.email == newCustomer.email))
+    {
+        return Results.BadRequest("Customer with email ${newCustomer.email} already exists");
+    }
     var rows = await sqlReader.newCustomer(newCustomer.name, newCustomer.email,newCustomer.password);
     if (rows > 0)
     {
@@ -39,6 +45,25 @@ app.MapPost("/Customers", async ([FromServices] SqlReader sqlReader, [FromBody] 
     }
     return Results.StatusCode(500);
 });
+app.MapPut("/Customers/{Id}", async ([FromServices] SqlReader sqlReader, int Id) =>
+{
+    var result = await sqlReader.BanUser(Id);
+    if (result > 0)
+    {
+        return Results.Ok();
+    }
+    return Results.StatusCode(500);
+});
+app.MapPut("/Customers/Unban/{Id}", async ([FromServices] SqlReader sqlReader, int Id) =>
+{
+    var result = await sqlReader.UnBanUser(Id);
+    if (result > 0)
+    {
+        return Results.Ok();
+    }
+    return Results.StatusCode(500);
+});
+
 app.MapGet("/Books/Search/{year}", async ([FromServices] SqlReader sqlReader, int year) =>
 {
     var books = await sqlReader.GetBooksAfter(year);

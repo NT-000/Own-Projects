@@ -52,6 +52,7 @@ function emptyArrays(){
 function navigateTo(page) {
     model.app.currentPage = page;
     console.log("currentPage:", model.app.currentPage);
+    model.input.orderpage.isOpen = false;
     changeView();
 }
    

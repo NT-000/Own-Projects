@@ -69,6 +69,21 @@ public class SqlReader
         return await connection.ExecuteAsync(query, new { Name = name, Email = email, Password = password });
     }
 
+    public async Task<int> BanUser(int id)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "UPDATE Customers SET isBanned = 1 where id = @Id";
+        return await connection.ExecuteAsync(query, new { Id = id });
+    }
+    public async Task<int> UnBanUser(int id)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var query = "UPDATE Customers SET isBanned = 0 where id = @Id";
+        return await connection.ExecuteAsync(query, new { Id = id });
+    }
+
     public async Task<List<Order>> GetOrders()
     {
         using var connection = new SqlConnection(_connectionString);

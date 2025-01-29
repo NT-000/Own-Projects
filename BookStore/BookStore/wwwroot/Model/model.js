@@ -23,6 +23,9 @@ const model = {
         mainpage:{
             books: [],
             authors: [],
+            mainPageResultHtml: "",
+            mainPageResultBanUsersHtml: "",
+            mainPageErrorHtml: "",
         },//model.input.mainpage
         orderpage:{
             orders:[],

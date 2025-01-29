@@ -26,6 +26,7 @@ function checkPassword(){
 }
 
 async function registerUser(){
+    model.input.registerPage.regMessage = "";
     let emailCheck = await checkEmail();
     let passwordCheck = checkPassword();
     if(emailCheck && passwordCheck) {
