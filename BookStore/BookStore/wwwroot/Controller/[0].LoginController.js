@@ -1,5 +1,6 @@
 
 async function compareUsers(){
+    model.input.loginPage.loginMessage = "";
     let response = await fetch('/Customers');
     console.log(response);
     let users = await response.json();

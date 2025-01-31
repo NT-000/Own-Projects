@@ -26,6 +26,10 @@ const model = {
             mainPageResultHtml: "",
             mainPageResultBanUsersHtml: "",
             mainPageErrorHtml: "",
+            isBannedOpen: false,
+            isUserOpen: false,
+            isOrdersOpen: false,
+            adminOrders:[],
         },//model.input.mainpage
         orderpage:{
             orders:[],
@@ -39,7 +43,12 @@ const model = {
             inputYear: null,
             inputSearchTitle: "",
             resultHtml: "",
+            inputQuantity: null,
+            isAllBooksOpen: false,
+            isResultsOpen: false,
         },//model.input.library
-        currentUser: {},//model.input.currentUser
+        currentUser: {
+            bookInventory : [],
+        },//model.input.currentUser
     },//model.input
 }//model

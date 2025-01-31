@@ -16,12 +16,10 @@ function checkPassword(){
     if(model.input.registerPage.inputPassword !== model.input.registerPage.inputPasswordConfirm){
         model.input.registerPage.regMessagePasswordConfirm = "Passwords do not match";
         return false;
-        
     }
     else{
         model.input.registerPage.regMessagePasswordConfirm = "Passwords do match";
        return true;
-        
     }
 }
 

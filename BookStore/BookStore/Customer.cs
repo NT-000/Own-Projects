@@ -8,7 +8,6 @@ public class Customer
     public string password {get;set;}
     public bool isAdmin { get; set;}
     public bool isBanned { get; set;}
-
     public Customer(string name, string email, string password,bool isAdmin = false, bool isBanned = false)
     {
         this.name = name;

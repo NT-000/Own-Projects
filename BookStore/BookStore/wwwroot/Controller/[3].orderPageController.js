@@ -51,6 +51,19 @@ function showOrdersCurrentUser(){
     }
     updateOrdersView();
 }
+
+async function purchaseBook(bookId){
+    let customerId = getCurrentUser().id;
+    let response = await fetch(`/Customers/${customerId}/PurchaseBook/${bookId}`,{
+        method: 'POST',
+    })
+    if(response.ok){
+        console.log("Book acquired(purchaseBook):", response.ok);
+    }
+    else{
+        console.log("Something went wrong(purchaseBook)");
+    }
+}
 // async function findQuantity(foundBook){
 //     let quantity = 0;
 //     let response = await fetch("/Orders")

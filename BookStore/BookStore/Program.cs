@@ -54,16 +54,56 @@ app.MapPut("/Customers/{Id}", async ([FromServices] SqlReader sqlReader, int Id)
     }
     return Results.StatusCode(500);
 });
-app.MapPut("/Customers/Unban/{Id}", async ([FromServices] SqlReader sqlReader, int Id) =>
-{
-    var result = await sqlReader.UnBanUser(Id);
-    if (result > 0)
-    {
-        return Results.Ok();
-    }
-    return Results.StatusCode(500);
-});
+app.MapPut("/Customers/Unban/{Id}", async ([FromServices] SqlReader sqlReader, int Id) =>{
+    
+        var result = await sqlReader.UnBanUser(Id);
+        if (result > 0)
+        {
+            return Results.Ok();
+        }
 
+        return Results.StatusCode(500);
+        
+});
+// app.MapGet("/Customers/{customerId}/CustomerBooks", async ([FromServices] SqlReader sqlReader, int customerId) =>
+// {
+//     var purchasedBooks = await sqlReader.GetPurchasedBooksByCustomer(customerId);
+//     return Results.Ok(purchasedBooks);
+// });
+// app.MapPost("Customers/{customerId}/PurchaseBook/{bookId}",
+//     async ([FromServices] SqlReader sqlReader, int customerId, int bookId) =>
+//     {
+//         var result = await sqlReader.AddPurchasedBook(customerId, bookId);
+//         if (result > 0)
+//         {
+//             return Results.Ok();
+//         }
+//         return Results.StatusCode(500);
+//     });
+app.MapPost("/Orders", async ([FromServices] SqlReader sqlReader, [FromBody] Order newOrder) =>
+{
+    Console.WriteLine($"Received order: Date={newOrder.order_date}, CustomerId={newOrder.customer_id}");
+    try
+    {
+        var orderId = await sqlReader.newOrder(newOrder.order_date, newOrder.customer_id);
+        if (orderId > 0)
+        {
+            return Results.Json(new Order
+            {
+                id = orderId,
+                order_date = DateTime.Now,
+                customer_id = newOrder.customer_id,
+            });
+        }
+
+        return Results.StatusCode(500);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error in POST /Orders: {ex.Message}");
+        return Results.StatusCode(500);
+    }
+});
 app.MapGet("/Books/Search/{year}", async ([FromServices] SqlReader sqlReader, int year) =>
 {
     var books = await sqlReader.GetBooksAfter(year);
@@ -85,9 +125,30 @@ app.MapGet("/Orders", async ([FromServices] SqlReader sqlReader) =>
     var orders = await sqlReader.GetOrders();
     return Results.Json(orders);
 });
+app.MapGet("/Orders/GetAllOrders", async ([FromServices] SqlReader sqlReader) =>
+{
+    var orders = await sqlReader.GetAllOrdersAdmin();
+    return Results.Json(orders);
+});
 app.MapGet("/OrderItems", async ([FromServices] SqlReader sqlReader) =>
 {
     var orderItems = await sqlReader.GetOrderItems();
     return Results.Json(orderItems);
+});
+app.MapPost("/OrderItems", async ([FromServices] SqlReader sqlReader, [FromBody] OrderItem newOrderItem) =>
+{
+var result = await sqlReader.newOrderItem(newOrderItem.order_id, newOrderItem.book_id, newOrderItem.quantity);
+if (result > 0)
+{
+    Console.WriteLine($"OrderItem: order_id={newOrderItem.order_id}, book_id={newOrderItem.book_id}, quantity={newOrderItem.quantity}"); 
+    return Results.Json( new OrderItem
+    {
+        order_id = newOrderItem.order_id,
+        book_id = newOrderItem.book_id,
+        quantity = newOrderItem.quantity,
+    });
+
+}
+return Results.StatusCode(500);
 });
 app.Run();

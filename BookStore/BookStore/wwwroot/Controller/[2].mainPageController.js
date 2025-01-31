@@ -17,6 +17,31 @@ async function GetCustomers(){
     }
     return model.input.mainpage.mainPageResultHtml;
 }
+async function fetchAllOrders(){
+    let response = await fetch(`/Orders/GetAllOrders`);
+    model.input.mainpage.adminOrders = await response.json();
+    console.log(model.input.mainpage.adminOrders);
+}
+
+async function showAllOrders(){
+    let html = "";
+    let response = await fetch(`/Customers`);
+    let users = await response.json();
+    for(let order of model.input.mainpage.adminOrders){
+        let customer = users.find(user => user.id === order.customer_id);
+       html+= `
+        <h3>Order:${order.id}</h3>
+        <div>Email:${customer.email}</div>
+        <div>Order date:${new Date(order.order_date).toLocaleDateString()}</div>
+        <div>Customer name:${customer.name}</div>
+       <hr> `;
+    }
+    return html;
+}
+async function fetchCustomers(){
+
+    
+}
 async function banUser(userid, useremail){
     model.input.mainpage.mainPageErrorHtml = "";
     let response = await fetch(`/Customers/${userid}`, {method: "PUT"});
@@ -28,6 +53,7 @@ async function banUser(userid, useremail){
     }
     updateViewMainPageAdmin();
 }
+
 
 async function showBannedUsers(){
     model.input.mainpage.mainPageResultBanUsersHtml = "";
@@ -51,7 +77,6 @@ async function unBanUser(userid, useremail){
     else{
         model.input.mainpage.mainPageErrorHtml = "Error";
     }
-    
     updateViewMainPageAdmin();
 }
 function getMainPageHtml(){
@@ -59,4 +84,8 @@ function getMainPageHtml(){
 }
 function getMainPageErrorHtml(){
     return model.input.mainpage.mainPageErrorHtml;
+}
+function closeOpenMainPage(status) {
+    model.input.mainpage[status] = !model.input.mainpage[status];
+    updateViewMainPageAdmin();
 }

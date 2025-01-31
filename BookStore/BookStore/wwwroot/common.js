@@ -48,6 +48,7 @@ function emptyArrays(){
     model.input.orderpage.orders = [];
     model.input.mainpage.books = [];
     model.input.mainpage.authors = [];
+    model.input.mainpage.adminOrders = [];
 }
 function navigateTo(page) {
     model.app.currentPage = page;
@@ -55,14 +56,19 @@ function navigateTo(page) {
     model.input.orderpage.isOpen = false;
     changeView();
 }
-   
-    async function fetchData(){
-        await fetchBooks();
-        await fetchAuthors();
-        changeView();
-        console.log("Orders in model:", model.input.orderpage.orders);
-    }
-
+async function fetchData(){
+    await fetchBooks();
+    await fetchAuthors();
+    // await fetchPurchasedBooks()
+    changeView();
+    console.log("Orders in model:", model.input.orderpage.orders);
+}
+// async function fetchPurchasedBooks(){
+//     let customerId = getCurrentUser().id;
+//     let response = await fetch("/Customers/${customerId}/CustomerBooks");
+//     model.input.currentUser.bookInventory = await response.json();
+//     console.log("${getCurrentUser().name} bought books:",model.input.currentUser.bookInventory);
+// }
 async function fetchBooks(){
     let response = await fetch('/Books');
     console.log(response);
@@ -88,3 +94,5 @@ function getCurrentUser(){
 function getResultHtml(){
     return model.input.librarypage.resultHtml;
 }
+
+

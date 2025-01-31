@@ -13,7 +13,7 @@ function showBooks() {
                     <th>Author</th>
                     <th>Genre</th>
                     <th>Published Year</th>
-                    <th>Rent</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +27,8 @@ function showBooks() {
                         <td>${book.title}</td>
                         <td>${book.genre}</td>
                         <td>${book.published_year}</td>
-                        <td><button>Rent now</button></td>
+                        <td><input type="number" placeholder="How many..." oninput="model.input.librarypage.inputQuantity=this.value"></td>
+                        <td><button onclick="placeOrder(${book.id})">Order now</button></td>
                     </tr>
                 `;
     }).join('')}
@@ -48,7 +49,6 @@ async function searchBooksByTitle() {
     let results = await response.json();
     console.log("searchBookByTitle:",results);
     bookTemplate(results);
-
 }
 
 function bookTemplate(results){
@@ -67,10 +67,11 @@ function bookTemplate(results){
                     </thead>
                     <tbody>
                         ${results.map(book => {
+            let author = model.input.mainpage.authors.find(author => author.id === book.author_id);
             return `
                                 <tr>
                                     <td>${book.title}</td>
-                                    <td>${book.author}</td>
+                                    <td>${author.name}</td>
                                     <td>${book.genre}</td>
                                     <td>${book.published_year}</td>
                                 </tr>
@@ -85,10 +86,70 @@ function bookTemplate(results){
     }
     updateLibraryPageView()
 }
+async function placeOrder(bookId){
+    let customerId = getCurrentUser().id;
+    let bookID = bookId;
+    console.log("currentUserId::",customerId);
+    let newOrder = {
+        customer_id: customerId,
+    };
+    console.log(newOrder);
+    try{
+        let response = await fetch(`/Orders`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(newOrder),
+        });
+        console.log(response);
+        if (response.ok) {
+            let newlyOrder = await response.json();
+            console.log("Order response:", newlyOrder);
+            console.log("The order is placed!:", response);
+            await newOrderItem(bookID, newlyOrder.id);
+        }
+        else{
+            console.log("error(placeOrder)");
+        }
+    }
+    catch(error){
+        console.log("error, server")
+    }
+
+}
+
+async function newOrderItem(bookid, newOrderId){
+    let newOrderItem = {
+        order_id: newOrderId,
+        book_id: bookid,
+        quantity: model.input.librarypage.inputQuantity || 1,
+    };
+    try{
+        let response = await fetch(`/OrderItems`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(newOrderItem),
+        });
+        if (response.ok) {
+            console.log("The orderItem is placed!:", response);
+            updateOrdersView();
+        }
+        else{
+            console.log("error");
+        }
+    }
+    catch(error){
+        console.log("error, server")
+    }
+}
 
 function getInputYear(){
     return model.input.librarypage.inputYear;
 }
 function getInputSearchTitle(){
     return model.input.librarypage.inputSearchTitle;
+}
+
+function closeOpenLibraryPage(status) {
+    model.input.librarypage[status] = !model.input.librarypage[status];
+    updateLibraryPageView();
 }
