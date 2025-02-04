@@ -3,9 +3,8 @@ function updateOrdersView() {
     getAppDiv().innerHTML =   `
     <h1>${getCurrentUser().name}'s Ordered Books</h1>
     ${createNavButtons()}
-    <div></div>
+    <div>${getOrderPage().errorHtml}</div>
     <button onclick="findOrder()">View Orders</button>
     <div>${ordersDiv}</div>
-  
     `;
 }

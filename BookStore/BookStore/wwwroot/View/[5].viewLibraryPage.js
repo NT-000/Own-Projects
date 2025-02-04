@@ -7,17 +7,29 @@ function updateLibraryPageView() {
         ${createNavButtons()}
 </div>
         <div class="container">
-        <input type="number" placeholder="Search for books by year..." oninput="model.input.librarypage.inputYear=this.value"> <input type="text" placeholder="Search for books by title..." oninput="model.input.librarypage.inputSearchTitle=this.value">
+        <input type="number" placeholder="Search for books by year..." oninput="getLibraryPage().inputYear=this.value"> <input type="text" placeholder="Search for books by title..." oninput="model.input.librarypage.inputSearchTitle=this.value">
         <div class="buttons">
+  
+    <select oninput="getLibraryPage().inputGenre=this.value">
+        <option value="">Choose a genre</option>
+        <option value="Education">Education</option>
+        <option value="Mystery">Mystery</option>
+        <option value="Autobiography">Autobiography</option>
+        <option value="Self-help">Self-help</option>
+        <option value="Biography">Biography</option>
+        <option value="Novel">Novel</option>
+    </select>
+        <button onclick="searchBooksByGenre()">Search genre</button>
         <button onclick="searchBooksByYear()">Search books by year</button>
         <button onclick="searchBooksByTitle()">Search books by title</button>
         </div>
         <div class="innercontainer">
         <div class="books">
         <h2 onclick="closeOpenLibraryPage('isAllBooksOpen')">All Books</h2>
-        <div>${model.input.librarypage.isAllBooksOpen ? showBooks() : ""}</div>
+        <div>${getLibraryPage().isAllBooksOpen ? showBooks() : ""}</div>
         <div onclick="closeOpenLibraryPage('isResultsOpen')">RESULTS</div>
-        <div>${model.input.librarypage.isResultsOpen ? model.input.librarypage.resultHtml : ""}</div>
+        <div>${getLibraryPage().isResultsOpen ? getLibraryPage().resultHtml : ""}</div>
+        <div>${getLibraryPage().resultGenre}</div>
         
 </div>
 </div>

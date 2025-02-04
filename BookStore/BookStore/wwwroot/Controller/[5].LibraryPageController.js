@@ -1,5 +1,5 @@
 function showBooks() {
-    let books = model.input.mainpage.books;
+    let books = getMainPage().books;
     if (books.length === 0) {
         return '';
     }
@@ -18,7 +18,7 @@ function showBooks() {
             </thead>
             <tbody>
                 ${books.map(book => {
-        let author = model.input.mainpage.authors.find(author => author.id === book.author_id);
+        let author = getMainPage().authors.find(author => author.id === book.author_id);
         console.log("book:",book,"author", author);
         return  `
                     <tr>
@@ -27,7 +27,7 @@ function showBooks() {
                         <td>${book.title}</td>
                         <td>${book.genre}</td>
                         <td>${book.published_year}</td>
-                        <td><input type="number" placeholder="How many..." oninput="model.input.librarypage.inputQuantity=this.value"></td>
+                        <td><input type="number" placeholder="How many..." oninput="getLibraryPage().inputQuantity=this.value"></td>
                         <td><button onclick="placeOrder(${book.id})">Order now</button></td>
                     </tr>
                 `;
@@ -50,11 +50,18 @@ async function searchBooksByTitle() {
     console.log("searchBookByTitle:",results);
     bookTemplate(results);
 }
+async function searchBooksByGenre() {
+    getLibraryPage().resultGenre = "";
+    let genre = getLibraryPage().inputGenre;
+    let response = await fetch(`/Books/${genre}`);
+    let books = await response.json();
+    bookTemplate(books);
+}
 
 function bookTemplate(results){
-    model.input.librarypage.resultHtml = "";
+    getLibraryPage().resultHtml = "";
     if (results.length > 0) {
-        model.input.librarypage.resultHtml = `
+        getLibraryPage().resultGenre = `
         
                         <table>
                     <thead>
@@ -67,13 +74,15 @@ function bookTemplate(results){
                     </thead>
                     <tbody>
                         ${results.map(book => {
-            let author = model.input.mainpage.authors.find(author => author.id === book.author_id);
+            let author = getMainPage().authors.find(author => author.id === book.author_id);
             return `
                                 <tr>
                                     <td>${book.title}</td>
                                     <td>${author.name}</td>
                                     <td>${book.genre}</td>
                                     <td>${book.published_year}</td>
+                                    <td><input type="number" placeholder="How many..." oninput="getLibraryPage().inputQuantity=this.value"></td>
+                                    <td><button onclick="placeOrder(${book.id})">Order now</button></td>
                                 </tr>
                             `;
         }).join('')}
@@ -82,7 +91,7 @@ function bookTemplate(results){
                 </table>
         `;}
     else{
-        model.input.librarypage.resultHtml = `No books found...`;
+        getLibraryPage().resultGenre = `No books found...`;
     }
     updateLibraryPageView()
 }
@@ -121,7 +130,7 @@ async function newOrderItem(bookid, newOrderId){
     let newOrderItem = {
         order_id: newOrderId,
         book_id: bookid,
-        quantity: model.input.librarypage.inputQuantity || 1,
+        quantity: getLibrarypage().inputQuantity || 1,
     };
     try{
         let response = await fetch(`/OrderItems`, {
@@ -143,13 +152,16 @@ async function newOrderItem(bookid, newOrderId){
 }
 
 function getInputYear(){
-    return model.input.librarypage.inputYear;
+    return getLibraryPage().inputYear;
 }
 function getInputSearchTitle(){
-    return model.input.librarypage.inputSearchTitle;
+    return getLibraryPage().inputSearchTitle;
 }
 
 function closeOpenLibraryPage(status) {
-    model.input.librarypage[status] = !model.input.librarypage[status];
+    (getLibraryPage())[status] = !(getLibraryPage())[status];
     updateLibraryPageView();
+}
+function getLibraryPage(){
+    return model.input.librarypage;
 }

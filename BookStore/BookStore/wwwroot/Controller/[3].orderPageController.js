@@ -2,15 +2,15 @@ async function findOrder(){
     let response = await fetch("/Orders")
     let orders = await response.json();
     console.log("Orders fetched(findOrder):", orders);
-    if(!model.input.orderpage.isOpen) {
-        model.input.orderpage.orders = [];
+    if(!getOrderPage().isOpen) {
+        getOrderPage().orders = [];
         for (let order of orders) {
             if (getCurrentUser().id == order.customer_id) {
                 await showOrderItem(order)
             }
         }
     }
-    console.log("Final orders in model:", model.input.orderpage.orders);
+    console.log("Final orders in model:", getOrderPage().orders);
     updateOrdersView()
 }
 async function showOrderItem(order){
@@ -18,60 +18,62 @@ async function showOrderItem(order){
     let orderItems = await response.json();
     for(let orderItem of orderItems){
         if(orderItem.order_id === order.id){
-            model.input.orderpage.orders.push(orderItem);
+            getOrderPage().orders.push(orderItem);
         }
     }
-    model.input.orderpage.isOpen = true;
-    console.log("orders in model(showOrderItem):",model.input.orderpage.orders);
+    getOrderPage().isOpen = true;
+    console.log("orders in model(showOrderItem):",getOrderPage().orders);
 }
 function showOrdersCurrentUser(){
-    model.input.orderpage.inputHtml = "";
-    if(model.input.orderpage.isOpen) {
+    getOrderPage().inputHtml = "";
+    console.log("Orders current user");
 
-        for (let order of model.input.orderpage.orders) {
-            let foundBook = model.input.mainpage.books.find(book => book.id == order.book_id);
-            let foundAuthor = model.input.mainpage.authors.find(author => foundBook.author_id == author.id);
-            // let foundDate  = findOrderDate(foundBook);
+    function getMainpage() {
+        return model.input.mainpage;
+    }
+
+    if(getOrderPage().isOpen) {
+
+        for (let order of getOrderPage().orders) {
+            let foundBook = getMainpage().books.find(book => book.id == order.book_id);
+            let foundAuthor = getMainPage().authors.find(author => foundBook.author_id == author.id);
             if (foundBook) {
-                model.input.orderpage.inputHtml +=  `
+                getOrderPage().inputHtml +=  `
             <h2>Order: ${order.order_id}</h2>
            <div>Title: ${foundBook.title}</div>
            <div>Author: ${foundAuthor.name}</div>
            <div>Genre: ${foundBook.genre}</div>
            <div>Year: ${foundBook.published_year}</div>
            <div>Amount: ${order.quantity}</div>
-           `
+           <button onclick="deleteOrder(${order.order_id})">Cancel Order</button>
+           `;
             }
             }
         
-        return model.input.orderpage.inputHtml;
+        return getOrderPage().inputHtml;
     }
     else{
         return "";
     }
-    updateOrdersView();
+    
 }
-
-async function purchaseBook(bookId){
-    let customerId = getCurrentUser().id;
-    let response = await fetch(`/Customers/${customerId}/PurchaseBook/${bookId}`,{
-        method: 'POST',
-    })
+async function deleteOrder(id){
+    getOrderPage().errorHtml = "";
+    console.log("Id (deleteorder)",id);
+    let response = await fetch(`/Orders/${id}`, {
+        method: "DELETE",
+    });
+    let text = await response.text();
+    console.log("Response from delete:", text);
     if(response.ok){
-        console.log("Book acquired(purchaseBook):", response.ok);
+        getOrderPage().errorHtml = `<h2>Order: ${id} is deleted...</h2>`;
+        navigateTo('orderpage');
     }
     else{
-        console.log("Something went wrong(purchaseBook)");
+        getOrderPage().errorHtml = "Error";
     }
+    
 }
-// async function findQuantity(foundBook){
-//     let quantity = 0;
-//     let response = await fetch("/Orders")
-//     let orders = await response.json();
-//     for(let order of orders){
-//         if(getCurrentUser().id == order.id && ){
-//            quantity += order.quantity
-//         }
-//     }
-//     return quantity;
-// }
+function getOrderPage(){
+    return model.input.orderpage;
+}

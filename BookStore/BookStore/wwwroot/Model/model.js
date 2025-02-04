@@ -1,6 +1,6 @@
 const model = {
     app: {
-        pages:['loginpage','registerpage','mainpage','orderpage', 'rentpage','librarypage'],
+        pages:['loginpage','registerpage','mainpage','orderpage', 'boughtBooksPage','librarypage'],
         currentPage: "loginpage",
     },//model.app
     input: {
@@ -26,26 +26,34 @@ const model = {
             mainPageResultHtml: "",
             mainPageResultBanUsersHtml: "",
             mainPageErrorHtml: "",
+            mainpageHtml: "",
+            mainpageAdminHtml: "",
             isBannedOpen: false,
             isUserOpen: false,
             isOrdersOpen: false,
+            isCompletedOrdersOpen: false,
+            isCompletedOrdersCustomerOpen: false,
             adminOrders:[],
         },//model.input.mainpage
         orderpage:{
             orders:[],
             isOpen: false,
             inputHtml: "",
+            errorHtml: "",
         },//model.input.orderpage
-        rentpage:{
-            
-        },//model.input.rentpage
+        boughtBooksPage:{
+            isBoughtBooksOpen: false,
+        },//model.input.boughtBooksPage
         librarypage:{
             inputYear: null,
             inputSearchTitle: "",
+            inputGenre: "",
+            resultGenre: "",
             resultHtml: "",
             inputQuantity: null,
             isAllBooksOpen: false,
             isResultsOpen: false,
+            isResultsGenreOpen: false,
         },//model.input.library
         currentUser: {
             bookInventory : [],

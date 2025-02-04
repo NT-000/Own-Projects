@@ -2,8 +2,8 @@ async function checkEmail(){
     let response = await fetch("Customers");
     let users = await response.json();
     for(let user of users){
-        if(user.email === model.input.registerPage.inputEmail){
-            model.input.registerPage.regMessageEmail = "Email already exists";
+        if(user.email === getRegPage().inputEmail){
+            getRegPage().regMessageEmail = "Email already exists";
             updateRegisterView()
             return false;
         }
@@ -13,25 +13,25 @@ async function checkEmail(){
     }
 }
 function checkPassword(){
-    if(model.input.registerPage.inputPassword !== model.input.registerPage.inputPasswordConfirm){
-        model.input.registerPage.regMessagePasswordConfirm = "Passwords do not match";
+    if(getRegPage().inputPassword !== getRegPage().inputPasswordConfirm){
+        getRegPage().regMessagePasswordConfirm = "Passwords do not match";
         return false;
     }
     else{
-        model.input.registerPage.regMessagePasswordConfirm = "Passwords do match";
+        getRegPage().regMessagePasswordConfirm = "Passwords do match";
        return true;
     }
 }
 
 async function registerUser(){
-    model.input.registerPage.regMessage = "";
+    getRegPage().regMessage = "";
     let emailCheck = await checkEmail();
     let passwordCheck = checkPassword();
     if(emailCheck && passwordCheck) {
         let newUser = {
-            name: model.input.registerPage.inputName,
-            email: model.input.registerPage.inputEmail,
-            password: model.input.registerPage.inputPassword,
+            name: getRegPage().inputName,
+            email: getRegPage().inputEmail,
+            password: getRegPage().inputPassword,
         };
         console.log("User data being sent:", newUser);
         try {
@@ -42,23 +42,25 @@ async function registerUser(){
             });
 
             if (response.ok) {
-                model.input.registerPage.regMessage = "Successfully registered!";
+                getRegPage().regMessage = "Successfully registered!";
                 console.log("added user:", newUser);
                 navigateTo('loginpage');
             } else
             {
-                    model.input.registerPage.regMessage = "Failed to sign up";
+                getRegPage().regMessage = "Failed to sign up";
             }
             
         } catch (error) {
             console.log("reg error:", error);
-            model.input.registerPage.regMessage = "An error occurred. Please try again.";
+            getRegPage().regMessage = "An error occurred. Please try again.";
         }
     }
-    model.input.registerPage.inputName = "";
-    model.input.registerPage.inputEmail = "";
-    model.input.registerPage.inputPassword = "";
+    getRegPage().inputName = "";
+    getRegPage().inputEmail = "";
+    getRegPage().inputPassword = "";
     updateLoginPageView();
 }
-
+function getRegPage(){
+    return model.input.registerPage;
+}
 

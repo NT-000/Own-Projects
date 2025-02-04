@@ -1,14 +1,14 @@
 
 async function compareUsers(){
-    model.input.loginPage.loginMessage = "";
+    getLoginPage().loginMessage = "";
     let response = await fetch('/Customers');
     console.log(response);
     let users = await response.json();
-    let foundUser = users.find(user => user.email === model.input.loginPage.username && user.password === model.input.loginPage.password);
+    let foundUser = users.find(user => user.email === getLoginPage().username && user.password === getLoginPage().password);
     console.log(foundUser);
         if(foundUser){
             if(foundUser.isBanned){
-            model.input.loginPage.loginMessage = "USER IS BANNED...";
+            getLoginPage().loginMessage = "USER IS BANNED...";
             }
             else{
             model.input.currentUser = foundUser;
@@ -17,13 +17,12 @@ async function compareUsers(){
             }
         }
         else{
-            model.input.loginPage.loginMessage = "Wrong username or password...";
+            getLoginPage().loginMessage = "Wrong username or password...";
         }
         await fetchData();
-    model.input.loginPage.username = '';
-    model.input.loginPage.password = '';
+    getLoginPage().username = '';
+    getLoginPage().password = '';
 }
-
-function GetLoginPageMessage(){
-    return model.input.loginPage.loginMessage;
+function getLoginPage() {
+    return model.input.loginPage;
 }

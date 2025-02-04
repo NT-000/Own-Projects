@@ -4,8 +4,8 @@ namespace BookStore;
 
 public class Author
 {
-    public int id {get;private set;}
-    public string name {get;private set;}
-    public DateTime birthdate {get;private set;}
+    public int id {get;set;}
+    public string name {get;set;}
+    public DateTime birthdate {get;set;}
     
 }
