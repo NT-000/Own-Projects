@@ -24,39 +24,7 @@ async function showOrderItem(order){
     getOrderPage().isOpen = true;
     console.log("orders in model(showOrderItem):",getOrderPage().orders);
 }
-function showOrdersCurrentUser(){
-    getOrderPage().inputHtml = "";
-    console.log("Orders current user");
 
-    function getMainpage() {
-        return model.input.mainpage;
-    }
-
-    if(getOrderPage().isOpen) {
-
-        for (let order of getOrderPage().orders) {
-            let foundBook = getMainpage().books.find(book => book.id == order.book_id);
-            let foundAuthor = getMainPage().authors.find(author => foundBook.author_id == author.id);
-            if (foundBook) {
-                getOrderPage().inputHtml +=  `
-            <h2>Order: ${order.order_id}</h2>
-           <div>Title: ${foundBook.title}</div>
-           <div>Author: ${foundAuthor.name}</div>
-           <div>Genre: ${foundBook.genre}</div>
-           <div>Year: ${foundBook.published_year}</div>
-           <div>Amount: ${order.quantity}</div>
-           <button onclick="deleteOrder(${order.order_id})">Cancel Order</button>
-           `;
-            }
-            }
-        
-        return getOrderPage().inputHtml;
-    }
-    else{
-        return "";
-    }
-    
-}
 async function deleteOrder(id){
     getOrderPage().errorHtml = "";
     console.log("Id (deleteorder)",id);

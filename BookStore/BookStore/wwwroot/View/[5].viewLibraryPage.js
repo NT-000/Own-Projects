@@ -37,3 +37,80 @@ function updateLibraryPageView() {
         `;
     
 }
+
+function bookTemplate(results){
+    getLibraryPage().resultHtml = "";
+    if (results.length > 0) {
+        getLibraryPage().resultGenre = `
+        
+                        <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${results.map(book => {
+            let author = getMainPage().authors.find(author => author.id === book.author_id);
+            return `
+                                <tr>
+                                    <td>${book.title}</td>
+                                    <td>${author.name}</td>
+                                    <td>${book.genre}</td>
+                                    <td>${book.published_year}</td>
+                                    <td><input type="number" placeholder="How many..." oninput="getLibraryPage().inputQuantity=this.value"></td>
+                                    <td><button onclick="placeOrder(${book.id})">Order now</button></td>
+                                </tr>
+                            `;
+        }).join('')}
+                    </tbody>
+                   
+                </table>
+        `;}
+    else{
+        getLibraryPage().resultGenre = `No books found...`;
+    }
+    updateLibraryPageView()
+}
+
+function showBooks() {
+    let books = getMainPage().books;
+    if (books.length === 0) {
+        return '';
+    }
+    console.log("show-books",books);
+    return `
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Published Year</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${books.map(book => {
+        let author = getMainPage().authors.find(author => author.id === book.author_id);
+        console.log("book:",book,"author", author);
+        return  `
+                    <tr>
+                        <td>${book.id}</td>
+                         <td>${author.name}</td>
+                        <td>${book.title}</td>
+                        <td>${book.genre}</td>
+                        <td>${book.published_year}</td>
+                        <td><input type="number" placeholder="How many..." oninput="getLibraryPage().inputQuantity=this.value"></td>
+                        <td><button onclick="placeOrder(${book.id})">Order now</button></td>
+                    </tr>
+                `;
+    }).join('')}
+            </tbody>
+        </table>
+    `;
+}

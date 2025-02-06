@@ -43,26 +43,7 @@ async function fetchCompletedOrders(orderId) {
     }
 }
 
-async function fetchPurchasedBooks(){
-    let id = getCurrentUser().id;
-    let html = "";
-    let response = await fetch(`/CustomerBooks/${id}`);
-    getCurrentUser().bookInventory = await response.json();
-    let answer = await fetch(`/Authors`);
-    let authors = await answer.json();
-    for(book of getCurrentUser().bookInventory){
-        let author = authors.find(a => a.id === book.author_id);
-        html += `
-        <hr>
-        <strong>Title: ${book.title}</strong>
-        <div>Genre: ${book.genre}</div>
-        <div>Author: ${author.name}</div>
-        <div>Year: ${book.published_year}</div>
-        <hr>
-        `;
-    }
-    return html;
-}
+
 
 function isOpenClosedBoughtBooksPage(){
     getBoughtBooksPage().isBoughtBooksOpen = !getBoughtBooksPage().isBoughtBooksOpen;

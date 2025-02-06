@@ -55,12 +55,16 @@ async function registerUser(){
             getRegPage().regMessage = "An error occurred. Please try again.";
         }
     }
-    getRegPage().inputName = "";
-    getRegPage().inputEmail = "";
-    getRegPage().inputPassword = "";
+    emptyRegFields();
     updateLoginPageView();
 }
 function getRegPage(){
     return model.input.registerPage;
+}
+
+function emptyRegFields(){
+    getRegPage().inputName = "";
+    getRegPage().inputEmail = "";
+    getRegPage().inputPassword = "";
 }
 
